@@ -15,8 +15,7 @@ export function ExploreTabStack() {
         headerShown: true,
         headerBackVisible: false,
         headerLeft: ({tintColor}) => <CustomBackButton tintColor={tintColor} />,
-      }}
-    >
+      }}>
       <Stack.Screen
         name="ExploreIndex"
         component={PlaceholderWithBack}

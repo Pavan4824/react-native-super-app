@@ -15,8 +15,7 @@ export function ProfileTabStack() {
         headerShown: true,
         headerBackVisible: false,
         headerLeft: ({tintColor}) => <CustomBackButton tintColor={tintColor} />,
-      }}
-    >
+      }}>
       <Stack.Screen
         name="ProfileIndex"
         component={PlaceholderWithBack}

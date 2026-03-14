@@ -12,8 +12,7 @@ export function RootDrawerNavigator() {
       screenOptions={{
         headerShown: false,
         drawerType: 'front',
-      }}
-    >
+      }}>
       <Drawer.Screen
         name="Main"
         component={MainTabNavigator}

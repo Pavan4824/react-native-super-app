@@ -15,8 +15,7 @@ export function DrawerStackNavigator() {
         headerShown: true,
         headerBackVisible: false,
         headerLeft: ({tintColor}) => <CustomBackButton tintColor={tintColor} />,
-      }}
-    >
+      }}>
       <Stack.Screen
         name="DrawerScreen1"
         component={PlaceholderWithBack}

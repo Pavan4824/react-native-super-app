@@ -15,8 +15,7 @@ export function SettingsTabStack() {
         headerShown: true,
         headerBackVisible: false,
         headerLeft: ({tintColor}) => <CustomBackButton tintColor={tintColor} />,
-      }}
-    >
+      }}>
       <Stack.Screen
         name="SettingsIndex"
         component={PlaceholderWithBack}
@@ -27,7 +26,10 @@ export function SettingsTabStack() {
         name="SettingsDetail"
         component={PlaceholderWithBack}
         options={{title: 'Settings Detail'}}
-        initialParams={{title: 'Settings Detail', nextScreen: 'SettingsSettings'}}
+        initialParams={{
+          title: 'Settings Detail',
+          nextScreen: 'SettingsSettings',
+        }}
       />
       <Stack.Screen
         name="SettingsSettings"

@@ -4,14 +4,12 @@ import {PlaceholderScreen} from '../../screens/PlaceholderScreen';
 import {CustomBackButton} from '../../components/CustomBackButton';
 import {withBackHandler} from '../../components/ScreenWithBackHandler';
 import type {HomeTabStackParamList} from '../types';
-import { Alert } from 'react-native';
+import {Alert} from 'react-native';
 
 const Stack = createNativeStackNavigator<HomeTabStackParamList>();
-const PlaceholderWithBack = withBackHandler(PlaceholderScreen, {disableHardwareBack: true, onBackRequest: ({ completeBack }) => {
-  Alert.alert('Leave?', 'Are you sure?', [
-    { text: 'Cancel', style: 'cancel' },
-    { text: 'Leave', onPress: completeBack },
-  ])}});
+const PlaceholderWithBack = withBackHandler(PlaceholderScreen, {
+  disableHardwareBack: true,
+});
 
 export function HomeTabStack() {
   return (
@@ -20,8 +18,7 @@ export function HomeTabStack() {
         headerShown: true,
         headerBackVisible: false,
         headerLeft: ({tintColor}) => <CustomBackButton tintColor={tintColor} />,
-      }}
-    >
+      }}>
       <Stack.Screen
         name="HomeIndex"
         component={PlaceholderWithBack}

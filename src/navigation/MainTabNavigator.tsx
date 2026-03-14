@@ -9,7 +9,10 @@ import type {MainTabParamList} from './types';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
-const TAB_ICONS: Record<keyof MainTabParamList, {focused: string; unfocused: string}> = {
+const TAB_ICONS: Record<
+  keyof MainTabParamList,
+  {focused: string; unfocused: string}
+> = {
   HomeTab: {focused: 'home', unfocused: 'home-outline'},
   ExploreTab: {focused: 'compass', unfocused: 'compass-outline'},
   ProfileTab: {focused: 'person', unfocused: 'person-outline'},
@@ -27,8 +30,7 @@ export function MainTabNavigator() {
           const iconName = focused ? icons.focused : icons.unfocused;
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-      })}
-    >
+      })}>
       <Tab.Screen
         name="HomeTab"
         component={HomeTabStack}
