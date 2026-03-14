@@ -7,7 +7,7 @@ module.exports = {
     sourceType: 'module',
     ecmaFeatures: {jsx: true},
   },
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'unused-imports'],
   overrides: [
     {
       files: ['*.ts', '*.tsx'],
@@ -15,6 +15,7 @@ module.exports = {
         '@typescript-eslint/no-shadow': ['error'],
         'no-shadow': 'off',
         'no-undef': 'off',
+        'unused-imports/no-unused-imports': 'warn',
       },
     },
   ],

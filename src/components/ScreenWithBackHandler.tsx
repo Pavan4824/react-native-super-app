@@ -28,7 +28,8 @@ export function withBackHandler<P extends object>(
   const opts: BackHandlerOptions = {...backHandlerOptions};
 
   function ScreenWithBackHandler(
-    props: P & NativeStackScreenProps<Record<string, object | undefined>, string>,
+    props: P &
+      NativeStackScreenProps<Record<string, object | undefined>, string>,
   ) {
     const {navigation} = props;
 
@@ -37,7 +38,7 @@ export function withBackHandler<P extends object>(
         return undefined;
       }
 
-      const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      const unsubscribe = navigation.addListener('beforeRemove', e => {
         e.preventDefault();
         opts.onBackRequest!({
           completeBack: () => navigation.dispatch(e.data.action),
@@ -52,7 +53,10 @@ export function withBackHandler<P extends object>(
         if (!opts.disableHardwareBack) {
           return undefined;
         }
-        const sub = BackHandler.addEventListener('hardwareBackPress', () => true);
+        const sub = BackHandler.addEventListener(
+          'hardwareBackPress',
+          () => true,
+        );
         return () => sub.remove();
       }, [opts.disableHardwareBack]),
     );

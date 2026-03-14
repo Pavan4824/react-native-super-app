@@ -4,7 +4,6 @@ import {PlaceholderScreen} from '../../screens/PlaceholderScreen';
 import {CustomBackButton} from '../../components/CustomBackButton';
 import {withBackHandler} from '../../components/ScreenWithBackHandler';
 import type {HomeTabStackParamList} from '../types';
-import {Alert} from 'react-native';
 
 const Stack = createNativeStackNavigator<HomeTabStackParamList>();
 const PlaceholderWithBack = withBackHandler(PlaceholderScreen, {

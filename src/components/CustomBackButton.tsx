@@ -22,10 +22,13 @@ export function CustomBackButton({tintColor = '#007AFF', style}: Props) {
     <Pressable
       onPress={() => navigation.goBack()}
       hitSlop={HIT_SLOP}
-      style={({pressed}) => [styles.container, style, pressed && styles.pressed]}
+      style={({pressed}) => [
+        styles.container,
+        style,
+        pressed && styles.pressed,
+      ]}
       accessibilityRole="button"
-      accessibilityLabel="Go back"
-    >
+      accessibilityLabel="Go back">
       <Ionicons
         name={Platform.OS === 'ios' ? 'chevron-back' : 'arrow-back'}
         size={Platform.OS === 'ios' ? 28 : 24}
