@@ -11,39 +11,68 @@ import {
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {HomeTabStackParamList} from '../navigation/types';
 import type {Post} from '../api/types';
-import {fetchPosts} from '../api/posts';
+import {fetchPostsPage} from '../api/posts';
 import {ApiError} from '../api';
 import {useThemeColors} from '../context/ThemeContext';
+
+const PAGE_SIZE = 10;
 
 type Props = NativeStackScreenProps<HomeTabStackParamList, 'HomeIndex'>;
 
 export function PostsListScreen({navigation}: Props) {
   const colors = useThemeColors();
   const [posts, setPosts] = useState<Post[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const loadPosts = useCallback(async (isRefresh = false) => {
-    if (isRefresh) setRefreshing(true);
-    else setLoading(true);
-    setError(null);
-    try {
-      const data = await fetchPosts();
-      setPosts(data);
-    } catch (e) {
-      setError(
-        e instanceof ApiError ? e.message : 'Failed to load posts. Pull to retry.',
-      );
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, []);
+  const loadPage = useCallback(
+    async (pageNum: number, append: boolean, isRefresh = false) => {
+      if (pageNum === 1 && !append) {
+        if (isRefresh) setRefreshing(true);
+        else setLoading(true);
+      } else {
+        setLoadingMore(true);
+      }
+      setError(null);
+      try {
+        const data = await fetchPostsPage(pageNum, PAGE_SIZE);
+        setHasMore(data.length >= PAGE_SIZE);
+        setPosts(prev => (append ? [...prev, ...data] : data));
+        setPage(pageNum);
+      } catch (e) {
+        setError(
+          e instanceof ApiError
+            ? e.message
+            : 'Failed to load posts. Pull to retry.',
+        );
+      } finally {
+        setLoading(false);
+        setRefreshing(false);
+        setLoadingMore(false);
+      }
+    },
+    [],
+  );
+
+  const loadFirstPage = useCallback(() => loadPage(1, false, false), [loadPage]);
+  const loadNextPage = useCallback(() => {
+    if (loading || loadingMore || !hasMore) return;
+    loadPage(page + 1, true, false);
+  }, [loadPage, page, loading, loadingMore, hasMore]);
+
+  const handleRefresh = useCallback(() => {
+    setPage(1);
+    setHasMore(true);
+    loadPage(1, false, true);
+  }, [loadPage]);
 
   React.useEffect(() => {
-    loadPosts();
-  }, [loadPosts]);
+    loadFirstPage();
+  }, [loadFirstPage]);
 
   const onPressPost = useCallback(
     (postId: number) => {
@@ -71,6 +100,18 @@ export function PostsListScreen({navigation}: Props) {
 
   const keyExtractor = useCallback((item: Post) => String(item.id), []);
 
+  const renderFooter = useCallback(() => {
+    if (!loadingMore) return null;
+    return (
+      <View style={styles.footer}>
+        <ActivityIndicator size="small" color={colors.primary} />
+        <Text style={[styles.footerText, {color: colors.textSecondary}]}>
+          Loading more…
+        </Text>
+      </View>
+    );
+  }, [loadingMore, colors]);
+
   if (loading && !refreshing) {
     return (
       <View style={[styles.center, {backgroundColor: colors.background}]}>
@@ -88,7 +129,7 @@ export function PostsListScreen({navigation}: Props) {
         <Text style={[styles.error, {color: colors.text}]}>{error}</Text>
         <TouchableOpacity
           style={[styles.retryButton, {backgroundColor: colors.primary}]}
-          onPress={() => loadPosts()}>
+          onPress={loadFirstPage}>
           <Text style={styles.retryText}>Retry</Text>
         </TouchableOpacity>
       </View>
@@ -102,10 +143,13 @@ export function PostsListScreen({navigation}: Props) {
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         contentContainerStyle={styles.listContent}
+        onEndReached={loadNextPage}
+        onEndReachedThreshold={0.3}
+        ListFooterComponent={renderFooter}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
-            onRefresh={() => loadPosts(true)}
+            onRefresh={handleRefresh}
             tintColor={colors.primary}
           />
         }
@@ -127,6 +171,14 @@ const styles = StyleSheet.create({
   listContent: {
     padding: 16,
     paddingBottom: 24,
+  },
+  footer: {
+    paddingVertical: 16,
+    alignItems: 'center',
+  },
+  footerText: {
+    marginTop: 8,
+    fontSize: 14,
   },
   card: {
     padding: 16,
