@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -11,66 +11,33 @@ import {
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {HomeTabStackParamList} from '../navigation/types';
 import type {Post} from '../api/types';
-import {fetchPostsPage} from '../api/posts';
-import {ApiError} from '../api';
 import {useThemeColors} from '../context/ThemeContext';
-
-const PAGE_SIZE = 10;
+import {useAppDispatch, useAppSelector} from '../store/hooks';
+import {selectPostsListState} from '../store/selectors';
+import {fetchPostsPageThunk} from '../store/slices/postsSlice';
 
 type Props = NativeStackScreenProps<HomeTabStackParamList, 'HomeIndex'>;
 
 export function PostsListScreen({navigation}: Props) {
   const colors = useThemeColors();
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  const {posts, page, hasMore, loading, loadingMore, refreshing, error} =
+    useAppSelector(selectPostsListState);
 
-  const loadPage = useCallback(
-    async (pageNum: number, append: boolean, isRefresh = false) => {
-      if (pageNum === 1 && !append) {
-        if (isRefresh) setRefreshing(true);
-        else setLoading(true);
-      } else {
-        setLoadingMore(true);
-      }
-      setError(null);
-      try {
-        const data = await fetchPostsPage(pageNum, PAGE_SIZE);
-        setHasMore(data.length >= PAGE_SIZE);
-        setPosts(prev => (append ? [...prev, ...data] : data));
-        setPage(pageNum);
-      } catch (e) {
-        setError(
-          e instanceof ApiError
-            ? e.message
-            : 'Failed to load posts. Pull to retry.',
-        );
-      } finally {
-        setLoading(false);
-        setRefreshing(false);
-        setLoadingMore(false);
-      }
-    },
-    [],
-  );
+  const loadFirstPage = useCallback(() => {
+    dispatch(fetchPostsPageThunk({page: 1, append: false}));
+  }, [dispatch]);
 
-  const loadFirstPage = useCallback(() => loadPage(1, false, false), [loadPage]);
   const loadNextPage = useCallback(() => {
     if (loading || loadingMore || !hasMore) return;
-    loadPage(page + 1, true, false);
-  }, [loadPage, page, loading, loadingMore, hasMore]);
+    dispatch(fetchPostsPageThunk({page: page + 1, append: true}));
+  }, [dispatch, page, loading, loadingMore, hasMore]);
 
   const handleRefresh = useCallback(() => {
-    setPage(1);
-    setHasMore(true);
-    loadPage(1, false, true);
-  }, [loadPage]);
+    dispatch(fetchPostsPageThunk({page: 1, append: false, isRefresh: true}));
+  }, [dispatch]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     loadFirstPage();
   }, [loadFirstPage]);
 

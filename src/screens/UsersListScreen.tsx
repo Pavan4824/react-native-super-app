@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -11,37 +11,28 @@ import {
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {ExploreTabStackParamList} from '../navigation/types';
 import type {User} from '../api/types';
-import {fetchUsers} from '../api/users';
-import {ApiError} from '../api';
 import {useThemeColors} from '../context/ThemeContext';
+import {useAppDispatch, useAppSelector} from '../store/hooks';
+import {selectUsersListState} from '../store/selectors';
+import {fetchUsersThunk} from '../store/slices/usersSlice';
 
 type Props = NativeStackScreenProps<ExploreTabStackParamList, 'ExploreIndex'>;
 
 export function UsersListScreen({navigation}: Props) {
   const colors = useThemeColors();
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  const {users, loading, refreshing, error} =
+    useAppSelector(selectUsersListState);
 
-  const loadUsers = useCallback(async (isRefresh = false) => {
-    if (isRefresh) setRefreshing(true);
-    else setLoading(true);
-    setError(null);
-    try {
-      const data = await fetchUsers();
-      setUsers(data);
-    } catch (e) {
-      setError(
-        e instanceof ApiError ? e.message : 'Failed to load users. Pull to retry.',
-      );
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, []);
+  const loadUsers = useCallback(() => {
+    dispatch(fetchUsersThunk());
+  }, [dispatch]);
 
-  React.useEffect(() => {
+  const loadUsersRefresh = useCallback(() => {
+    dispatch(fetchUsersThunk(true));
+  }, [dispatch]);
+
+  useEffect(() => {
     loadUsers();
   }, [loadUsers]);
 
@@ -55,15 +46,25 @@ export function UsersListScreen({navigation}: Props) {
   const renderItem = useCallback(
     ({item}: {item: User}) => (
       <TouchableOpacity
-        style={[styles.card, {backgroundColor: colors.backgroundSecondary, borderColor: colors.border}]}
+        style={[
+          styles.card,
+          {
+            backgroundColor: colors.backgroundSecondary,
+            borderColor: colors.border,
+          },
+        ]}
         onPress={() => onPressUser(item.id)}
         activeOpacity={0.7}>
         <Text style={[styles.cardName, {color: colors.text}]}>{item.name}</Text>
-        <Text style={[styles.cardEmail, {color: colors.textSecondary}]} numberOfLines={1}>
+        <Text
+          style={[styles.cardEmail, {color: colors.textSecondary}]}
+          numberOfLines={1}>
           {item.email}
         </Text>
         {item.company ? (
-          <Text style={[styles.cardCompany, {color: colors.textSecondary}]} numberOfLines={1}>
+          <Text
+            style={[styles.cardCompany, {color: colors.textSecondary}]}
+            numberOfLines={1}>
             {item.company.name}
           </Text>
         ) : null}
@@ -91,7 +92,7 @@ export function UsersListScreen({navigation}: Props) {
         <Text style={[styles.error, {color: colors.text}]}>{error}</Text>
         <TouchableOpacity
           style={[styles.retryButton, {backgroundColor: colors.primary}]}
-          onPress={() => loadUsers()}>
+          onPress={loadUsers}>
           <Text style={styles.retryText}>Retry</Text>
         </TouchableOpacity>
       </View>
@@ -108,7 +109,7 @@ export function UsersListScreen({navigation}: Props) {
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
-            onRefresh={() => loadUsers(true)}
+            onRefresh={loadUsersRefresh}
             tintColor={colors.primary}
           />
         }

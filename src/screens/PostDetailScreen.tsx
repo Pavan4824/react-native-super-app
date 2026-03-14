@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
   ActivityIndicator,
   ScrollView,
@@ -8,43 +8,23 @@ import {
 } from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {HomeTabStackParamList} from '../navigation/types';
-import {fetchPost} from '../api/posts';
-import {fetchUser} from '../api/users';
-import type {Post} from '../api/types';
-import type {User} from '../api/types';
-import {ApiError} from '../api';
 import {useThemeColors} from '../context/ThemeContext';
+import {useAppDispatch, useAppSelector} from '../store/hooks';
+import {selectPostDetailState} from '../store/selectors';
+import {fetchPostByIdThunk} from '../store/slices/postsSlice';
 
 type Props = NativeStackScreenProps<HomeTabStackParamList, 'PostDetail'>;
 
 export function PostDetailScreen({route}: Props) {
   const postId = Number(route.params.postId);
   const colors = useThemeColors();
-  const [post, setPost] = useState<Post | null>(null);
-  const [author, setAuthor] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  const {post, author, loading, error} =
+    useAppSelector(selectPostDetailState);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const postData = await fetchPost(postId);
-      setPost(postData);
-      const u = await fetchUser(postData.userId).catch(() => null);
-      setAuthor(u ?? null);
-    } catch (e) {
-      setError(
-        e instanceof ApiError ? e.message : 'Failed to load post.',
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [postId]);
-
-  React.useEffect(() => {
-    load();
-  }, [load]);
+  useEffect(() => {
+    dispatch(fetchPostByIdThunk(postId));
+  }, [dispatch, postId]);
 
   if (loading) {
     return (
@@ -57,7 +37,7 @@ export function PostDetailScreen({route}: Props) {
     );
   }
 
-  if (error || !post) {
+  if (error || !post || post.id !== postId) {
     return (
       <View style={[styles.center, {backgroundColor: colors.background}]}>
         <Text style={[styles.error, {color: colors.text}]}>
