@@ -1,4 +1,5 @@
 import React from 'react';
+import {Alert} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {PlaceholderScreen} from '../../screens/PlaceholderScreen';
 import {CustomBackButton} from '../../components/CustomBackButton';
@@ -7,7 +8,12 @@ import type {HomeTabStackParamList} from '../types';
 
 const Stack = createNativeStackNavigator<HomeTabStackParamList>();
 const PlaceholderWithBack = withBackHandler(PlaceholderScreen, {
-  disableHardwareBack: true,
+  onBackRequest: ({completeBack}) => {
+    Alert.alert('Leave?', 'Are you sure you want to leave?', [
+      {text: "Don't leave", style: 'cancel'},
+      {text: 'Leave', style: 'destructive', onPress: completeBack},
+    ]);
+  },
 });
 
 export function HomeTabStack() {
