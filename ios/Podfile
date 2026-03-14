@@ -12,6 +12,9 @@ end
 target 'superApp' do
   config = use_native_modules!
 
+  # RNReanimated 4.x depends on RNWorklets (react-native-worklets)
+  pod 'RNWorklets', :path => '../node_modules/react-native-worklets'
+
   
   use_react_native!(
     :path => config[:reactNativePath],
