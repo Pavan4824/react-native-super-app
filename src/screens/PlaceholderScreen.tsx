@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {PlaceholderScreenParams} from '../navigation/types';
 
@@ -23,15 +18,13 @@ export function PlaceholderScreen({route, navigation}: Props) {
       {nextScreen ? (
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate(nextScreen as never)}
-        >
+          onPress={() => navigation.navigate(nextScreen as never)}>
           <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
       ) : null}
       <TouchableOpacity
         style={styles.buttonSecondary}
-        onPress={() => navigation.goBack()}
-      >
+        onPress={() => navigation.goBack()}>
         <Text style={styles.buttonText}>Back</Text>
       </TouchableOpacity>
     </View>

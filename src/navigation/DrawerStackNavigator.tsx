@@ -2,9 +2,11 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {PlaceholderScreen} from '../screens/PlaceholderScreen';
 import {CustomBackButton} from '../components/CustomBackButton';
+import {withBackHandler} from '../hoc/ScreenWithBackHandler';
 import type {DrawerStackParamList} from './types';
 
 const Stack = createNativeStackNavigator<DrawerStackParamList>();
+const PlaceholderWithBack = withBackHandler(PlaceholderScreen);
 
 export function DrawerStackNavigator() {
   return (
@@ -13,41 +15,40 @@ export function DrawerStackNavigator() {
         headerShown: true,
         headerBackVisible: false,
         headerLeft: ({tintColor}) => <CustomBackButton tintColor={tintColor} />,
-      }}
-    >
+      }}>
       <Stack.Screen
         name="DrawerScreen1"
-        component={PlaceholderScreen}
+        component={PlaceholderWithBack}
         options={{title: 'Drawer 1'}}
         initialParams={{title: 'Drawer Screen 1', nextScreen: 'DrawerScreen2'}}
       />
       <Stack.Screen
         name="DrawerScreen2"
-        component={PlaceholderScreen}
+        component={PlaceholderWithBack}
         options={{title: 'Drawer 2'}}
         initialParams={{title: 'Drawer Screen 2', nextScreen: 'DrawerScreen3'}}
       />
       <Stack.Screen
         name="DrawerScreen3"
-        component={PlaceholderScreen}
+        component={PlaceholderWithBack}
         options={{title: 'Drawer 3'}}
         initialParams={{title: 'Drawer Screen 3', nextScreen: 'DrawerScreen4'}}
       />
       <Stack.Screen
         name="DrawerScreen4"
-        component={PlaceholderScreen}
+        component={PlaceholderWithBack}
         options={{title: 'Drawer 4'}}
         initialParams={{title: 'Drawer Screen 4', nextScreen: 'DrawerScreen5'}}
       />
       <Stack.Screen
         name="DrawerScreen5"
-        component={PlaceholderScreen}
+        component={PlaceholderWithBack}
         options={{title: 'Drawer 5'}}
         initialParams={{title: 'Drawer Screen 5', nextScreen: 'DrawerScreen6'}}
       />
       <Stack.Screen
         name="DrawerScreen6"
-        component={PlaceholderScreen}
+        component={PlaceholderWithBack}
         options={{title: 'Drawer 6'}}
         initialParams={{title: 'Drawer Screen 6'}}
       />
