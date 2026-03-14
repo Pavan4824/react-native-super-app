@@ -1,17 +1,24 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {PlaceholderScreen} from '../../screens/PlaceholderScreen';
+import {CustomBackButton} from '../../components/CustomBackButton';
 import type {SettingsTabStackParamList} from '../types';
 
 const Stack = createNativeStackNavigator<SettingsTabStackParamList>();
 
 export function SettingsTabStack() {
   return (
-    <Stack.Navigator screenOptions={{headerShown: true}}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: true,
+        headerBackVisible: false,
+        headerLeft: ({tintColor}) => <CustomBackButton tintColor={tintColor} />,
+      }}
+    >
       <Stack.Screen
         name="SettingsIndex"
         component={PlaceholderScreen}
-        options={{title: 'Settings'}}
+        options={{title: 'Settings', headerLeft: () => null}}
         initialParams={{title: 'Settings', nextScreen: 'SettingsDetail'}}
       />
       <Stack.Screen

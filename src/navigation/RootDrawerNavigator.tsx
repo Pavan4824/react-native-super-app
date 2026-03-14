@@ -10,7 +10,7 @@ export function RootDrawerNavigator() {
   return (
     <Drawer.Navigator
       screenOptions={{
-        headerShown: true,
+        headerShown: false,
         drawerType: 'front',
       }}
     >

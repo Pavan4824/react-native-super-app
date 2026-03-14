@@ -1,17 +1,24 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {PlaceholderScreen} from '../../screens/PlaceholderScreen';
+import {CustomBackButton} from '../../components/CustomBackButton';
 import type {ExploreTabStackParamList} from '../types';
 
 const Stack = createNativeStackNavigator<ExploreTabStackParamList>();
 
 export function ExploreTabStack() {
   return (
-    <Stack.Navigator screenOptions={{headerShown: true}}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: true,
+        headerBackVisible: false,
+        headerLeft: ({tintColor}) => <CustomBackButton tintColor={tintColor} />,
+      }}
+    >
       <Stack.Screen
         name="ExploreIndex"
         component={PlaceholderScreen}
-        options={{title: 'Explore'}}
+        options={{title: 'Explore', headerLeft: () => null}}
         initialParams={{title: 'Explore', nextScreen: 'ExploreDetail'}}
       />
       <Stack.Screen

@@ -1,13 +1,20 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {PlaceholderScreen} from '../screens/PlaceholderScreen';
+import {CustomBackButton} from '../components/CustomBackButton';
 import type {DrawerStackParamList} from './types';
 
 const Stack = createNativeStackNavigator<DrawerStackParamList>();
 
 export function DrawerStackNavigator() {
   return (
-    <Stack.Navigator screenOptions={{headerShown: true}}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: true,
+        headerBackVisible: false,
+        headerLeft: ({tintColor}) => <CustomBackButton tintColor={tintColor} />,
+      }}
+    >
       <Stack.Screen
         name="DrawerScreen1"
         component={PlaceholderScreen}
