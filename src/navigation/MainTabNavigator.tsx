@@ -6,6 +6,7 @@ import {ExploreTabStack} from './stacks/ExploreTabStack';
 import {ProfileTabStack} from './stacks/ProfileTabStack';
 import {SettingsTabStack} from './stacks/SettingsTabStack';
 import type {MainTabParamList} from './types';
+import {useThemeColors} from '../context/ThemeContext';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
@@ -20,10 +21,14 @@ const TAB_ICONS: Record<
 };
 
 export function MainTabNavigator() {
+  const colors = useThemeColors();
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
         headerShown: false,
+        tabBarStyle: {backgroundColor: colors.backgroundSecondary},
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textSecondary,
         tabBarLabelStyle: {fontSize: 12},
         tabBarIcon: ({focused, color, size}) => {
           const icons = TAB_ICONS[route.name as keyof MainTabParamList];
