@@ -34,14 +34,14 @@ export type PlaceholderScreenParams = {
  * Each tab has its own stack with 3 screens.
  */
 export type HomeTabStackParamList = {
-  HomeIndex: PlaceholderScreenParams | undefined;
-  HomeDetail: PlaceholderScreenParams | undefined;
+  HomeIndex: undefined;
+  PostDetail: {postId: number};
   HomeSettings: PlaceholderScreenParams | undefined;
 };
 
 export type ExploreTabStackParamList = {
-  ExploreIndex: PlaceholderScreenParams | undefined;
-  ExploreDetail: PlaceholderScreenParams | undefined;
+  ExploreIndex: undefined;
+  UserDetail: {userId: number};
   ExploreSettings: PlaceholderScreenParams | undefined;
 };
 

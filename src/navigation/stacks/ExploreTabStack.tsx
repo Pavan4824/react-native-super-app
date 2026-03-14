@@ -1,6 +1,8 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {PlaceholderScreen} from '../../screens/PlaceholderScreen';
+import {UsersListScreen} from '../../screens/UsersListScreen';
+import {UserDetailScreen} from '../../screens/UserDetailScreen';
 import {CustomBackButton} from '../../components/CustomBackButton';
 import {withBackHandler} from '../../hoc/ScreenWithBackHandler';
 import type {ExploreTabStackParamList} from '../types';
@@ -18,15 +20,13 @@ export function ExploreTabStack() {
       }}>
       <Stack.Screen
         name="ExploreIndex"
-        component={PlaceholderWithBack}
-        options={{title: 'Explore', headerLeft: () => null}}
-        initialParams={{title: 'Explore', nextScreen: 'ExploreDetail'}}
+        component={UsersListScreen}
+        options={{title: 'Users', headerLeft: () => null}}
       />
       <Stack.Screen
-        name="ExploreDetail"
-        component={PlaceholderWithBack}
-        options={{title: 'Explore Detail'}}
-        initialParams={{title: 'Explore Detail', nextScreen: 'ExploreSettings'}}
+        name="UserDetail"
+        component={UserDetailScreen}
+        options={{title: 'User'}}
       />
       <Stack.Screen
         name="ExploreSettings"
