@@ -1,7 +1,4 @@
-import {
-  fetchPostsPageThunk,
-  fetchPostByIdThunk,
-} from './slices/postsSlice';
+import {fetchPostsPageThunk, fetchPostByIdThunk} from './slices/postsSlice';
 import {fetchUsersThunk, fetchUserByIdThunk} from './slices/usersSlice';
 import {startAppListening} from './listenerMiddleware';
 
@@ -18,7 +15,8 @@ export function addListeners(): void {
         ? 'fulfilled'
         : 'rejected';
       if (__DEV__) {
-        const arg = 'meta' in action ? (action.meta as {arg: unknown}).arg : undefined;
+        const arg =
+          'meta' in action ? (action.meta as {arg: unknown}).arg : undefined;
         console.log(
           `[listener] posts/fetchPage ${status}`,
           arg,
