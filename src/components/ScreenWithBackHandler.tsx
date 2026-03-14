@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 import {BackHandler} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 export type BackHandlerOptions = {
@@ -46,16 +47,15 @@ export function withBackHandler<P extends object>(
       return unsubscribe;
     }, [navigation]);
 
-    useEffect(() => {
-      if (!opts.disableHardwareBack) {
-        return undefined;
-      }
-
-      const sub = BackHandler.addEventListener('hardwareBackPress', () => {
-        return true;
-      });
-      return () => sub.remove();
-    }, []);
+    useFocusEffect(
+      React.useCallback(() => {
+        if (!opts.disableHardwareBack) {
+          return undefined;
+        }
+        const sub = BackHandler.addEventListener('hardwareBackPress', () => true);
+        return () => sub.remove();
+      }, [opts.disableHardwareBack]),
+    );
 
     return <WrappedComponent {...(props as P)} />;
   }
