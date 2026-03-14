@@ -18,7 +18,7 @@ import {useThemeColors} from '../context/ThemeContext';
 type Props = NativeStackScreenProps<ExploreTabStackParamList, 'UserDetail'>;
 
 export function UserDetailScreen({route}: Props) {
-  const {userId} = route.params;
+  const userId = Number(route.params.userId);
   const colors = useThemeColors();
   const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);

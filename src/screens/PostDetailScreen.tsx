@@ -18,7 +18,7 @@ import {useThemeColors} from '../context/ThemeContext';
 type Props = NativeStackScreenProps<HomeTabStackParamList, 'PostDetail'>;
 
 export function PostDetailScreen({route}: Props) {
-  const {postId} = route.params;
+  const postId = Number(route.params.postId);
   const colors = useThemeColors();
   const [post, setPost] = useState<Post | null>(null);
   const [author, setAuthor] = useState<User | null>(null);

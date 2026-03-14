@@ -4,6 +4,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
 import {RootDrawerNavigator} from './src/navigation/RootDrawerNavigator';
+import {linking} from './src/navigation/linking';
 import {
   ThemeProvider,
   useTheme,
@@ -39,7 +40,7 @@ function AppContent(): React.JSX.Element {
         barStyle={isDark ? 'light-content' : 'dark-content'}
         backgroundColor={colors.background}
       />
-      <NavigationContainer theme={navigationTheme}>
+      <NavigationContainer linking={linking} theme={navigationTheme}>
         <RootDrawerNavigator />
       </NavigationContainer>
     </>
