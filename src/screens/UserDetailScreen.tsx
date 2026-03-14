@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
   ActivityIndicator,
   ScrollView,
@@ -8,45 +8,23 @@ import {
 } from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {ExploreTabStackParamList} from '../navigation/types';
-import type {User} from '../api/types';
-import type {Post} from '../api/types';
-import {fetchUser} from '../api/users';
-import {fetchPostsByUserId} from '../api/posts';
-import {ApiError} from '../api';
 import {useThemeColors} from '../context/ThemeContext';
+import {useAppDispatch, useAppSelector} from '../store/hooks';
+import {selectUserDetailState} from '../store/selectors';
+import {fetchUserByIdThunk} from '../store/slices/usersSlice';
 
 type Props = NativeStackScreenProps<ExploreTabStackParamList, 'UserDetail'>;
 
 export function UserDetailScreen({route}: Props) {
   const userId = Number(route.params.userId);
   const colors = useThemeColors();
-  const [user, setUser] = useState<User | null>(null);
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  const {user, posts, loading, error} =
+    useAppSelector(selectUserDetailState);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const [userData, postsData] = await Promise.all([
-        fetchUser(userId),
-        fetchPostsByUserId(userId),
-      ]);
-      setUser(userData);
-      setPosts(postsData);
-    } catch (e) {
-      setError(
-        e instanceof ApiError ? e.message : 'Failed to load user.',
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [userId]);
-
-  React.useEffect(() => {
-    load();
-  }, [load]);
+  useEffect(() => {
+    dispatch(fetchUserByIdThunk(userId));
+  }, [dispatch, userId]);
 
   if (loading) {
     return (
@@ -59,7 +37,7 @@ export function UserDetailScreen({route}: Props) {
     );
   }
 
-  if (error || !user) {
+  if (error || !user || user.id !== userId) {
     return (
       <View style={[styles.center, {backgroundColor: colors.background}]}>
         <Text style={[styles.error, {color: colors.text}]}>
