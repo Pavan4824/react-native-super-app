@@ -3,7 +3,7 @@ import {Alert} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {PlaceholderScreen} from '../../screens/PlaceholderScreen';
 import {CustomBackButton} from '../../components/CustomBackButton';
-import {withBackHandler} from '../../components/ScreenWithBackHandler';
+import {withBackHandler} from '../../hoc/ScreenWithBackHandler';
 import type {HomeTabStackParamList} from '../types';
 
 const Stack = createNativeStackNavigator<HomeTabStackParamList>();

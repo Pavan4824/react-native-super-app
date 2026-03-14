@@ -2,7 +2,7 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {PlaceholderScreen} from '../../screens/PlaceholderScreen';
 import {CustomBackButton} from '../../components/CustomBackButton';
-import {withBackHandler} from '../../components/ScreenWithBackHandler';
+import {withBackHandler} from '../../hoc/ScreenWithBackHandler';
 import type {ProfileTabStackParamList} from '../types';
 
 const Stack = createNativeStackNavigator<ProfileTabStackParamList>();
