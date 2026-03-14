@@ -1,11 +1,14 @@
 import React from 'react';
-import {Alert} from 'react-native';
+import {Alert, TouchableOpacity} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {PlaceholderScreen} from '../../screens/PlaceholderScreen';
 import {PostsListScreen} from '../../screens/PostsListScreen';
 import {PostDetailScreen} from '../../screens/PostDetailScreen';
+import {SearchScreen} from '../../screens/SearchScreen';
 import {CustomBackButton} from '../../components/CustomBackButton';
 import {withBackHandler} from '../../hoc/ScreenWithBackHandler';
+import {useThemeColors} from '../../context/ThemeContext';
 import type {HomeTabStackParamList} from '../types';
 
 const Stack = createNativeStackNavigator<HomeTabStackParamList>();
@@ -18,6 +21,18 @@ const PlaceholderWithBack = withBackHandler(PlaceholderScreen, {
   },
 });
 
+function SearchHeaderButton({onPress}: {onPress: () => void}) {
+  const colors = useThemeColors();
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+      style={{marginRight: 8}}>
+      <Ionicons name="search" size={24} color={colors.primary} />
+    </TouchableOpacity>
+  );
+}
+
 export function HomeTabStack() {
   return (
     <Stack.Navigator
@@ -29,7 +44,18 @@ export function HomeTabStack() {
       <Stack.Screen
         name="HomeIndex"
         component={PostsListScreen}
-        options={{title: 'Posts', headerLeft: () => null}}
+        options={({navigation}) => ({
+          title: 'Posts',
+          headerLeft: () => null,
+          headerRight: () => (
+            <SearchHeaderButton onPress={() => navigation.navigate('Search')} />
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{title: 'Search'}}
       />
       <Stack.Screen
         name="PostDetail"

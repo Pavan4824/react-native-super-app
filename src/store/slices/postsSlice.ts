@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {fetchPost, fetchPostsPage} from '../../api/posts';
+import {fetchPost, fetchPosts, fetchPostsPage} from '../../api/posts';
 import {fetchUser} from '../../api/users';
 import {ApiError} from '../../api';
 import type {Post, User} from '../../api/types';
@@ -27,39 +27,49 @@ export const fetchPostsPageThunk = createAsyncThunk<
   {posts: Post[]; page: number; append: boolean},
   {page: number; append: boolean; isRefresh?: boolean},
   {rejectValue: string}
->(
-  'posts/fetchPage',
-  async ({page, append}, {rejectWithValue}) => {
-    try {
-      const posts = await fetchPostsPage(page, PAGE_SIZE);
-      return {posts, page, append};
-    } catch (e) {
-      const message =
-        e instanceof ApiError ? e.message : 'Failed to load posts. Pull to retry.';
-      return rejectWithValue(message);
-    }
-  },
-);
+>('posts/fetchPage', async ({page, append}, {rejectWithValue}) => {
+  try {
+    const posts = await fetchPostsPage(page, PAGE_SIZE);
+    return {posts, page, append};
+  } catch (e) {
+    const message =
+      e instanceof ApiError
+        ? e.message
+        : 'Failed to load posts. Pull to retry.';
+    return rejectWithValue(message);
+  }
+});
+
+/** Fetch all posts for search. Dispatch: fetchPostsSearchThunk(). Fulfilled: Post[]. */
+export const fetchPostsSearchThunk = createAsyncThunk<
+  Post[],
+  void,
+  {rejectValue: string}
+>('posts/fetchSearch', async (_, {rejectWithValue}) => {
+  try {
+    return await fetchPosts();
+  } catch (e) {
+    const message =
+      e instanceof ApiError ? e.message : 'Search failed. Try again.';
+    return rejectWithValue(message);
+  }
+});
 
 /** Fetch one post and its author. Dispatch: fetchPostByIdThunk(postId). Fulfilled: { post, author }. */
 export const fetchPostByIdThunk = createAsyncThunk<
   {post: Post; author: User | null},
   number,
   {rejectValue: string}
->(
-  'posts/fetchById',
-  async (postId, {rejectWithValue}) => {
-    try {
-      const post = await fetchPost(postId);
-      const author = await fetchUser(post.userId).catch(() => null);
-      return {post, author: author ?? null};
-    } catch (e) {
-      const message =
-        e instanceof ApiError ? e.message : 'Failed to load post.';
-      return rejectWithValue(message);
-    }
-  },
-);
+>('posts/fetchById', async (postId, {rejectWithValue}) => {
+  try {
+    const post = await fetchPost(postId);
+    const author = await fetchUser(post.userId).catch(() => null);
+    return {post, author: author ?? null};
+  } catch (e) {
+    const message = e instanceof ApiError ? e.message : 'Failed to load post.';
+    return rejectWithValue(message);
+  }
+});
 
 export interface PostsState {
   list: Post[];
@@ -74,6 +84,10 @@ export interface PostsState {
   currentPostAuthor: User | null;
   currentPostLoading: boolean;
   currentPostError: string | null;
+  /** All posts for search (fetched once, filtered client-side). */
+  searchPosts: Post[];
+  searchLoading: boolean;
+  searchError: string | null;
 }
 
 const initialState: PostsState = {
@@ -88,6 +102,9 @@ const initialState: PostsState = {
   currentPostAuthor: null,
   currentPostLoading: false,
   currentPostError: null,
+  searchPosts: [],
+  searchLoading: false,
+  searchError: null,
 };
 
 const postsSlice = createSlice({
@@ -101,6 +118,10 @@ const postsSlice = createSlice({
       state.currentPost = null;
       state.currentPostAuthor = null;
       state.currentPostError = null;
+    },
+    clearSearchPosts(state) {
+      state.searchPosts = [];
+      state.searchError = null;
     },
   },
   extraReducers: builder => {
@@ -153,8 +174,25 @@ const postsSlice = createSlice({
         state.currentPostLoading = false;
         state.currentPostError = payload ?? 'Failed to load post.';
       });
+
+    // fetchPostsSearchThunk
+    builder
+      .addCase(fetchPostsSearchThunk.pending, state => {
+        state.searchLoading = true;
+        state.searchError = null;
+      })
+      .addCase(fetchPostsSearchThunk.fulfilled, (state, {payload}) => {
+        state.searchLoading = false;
+        state.searchError = null;
+        state.searchPosts = payload;
+      })
+      .addCase(fetchPostsSearchThunk.rejected, (state, {payload}) => {
+        state.searchLoading = false;
+        state.searchError = payload ?? 'Search failed.';
+      });
   },
 });
 
-export const {clearPostsListError, clearPostDetail} = postsSlice.actions;
+export const {clearPostsListError, clearPostDetail, clearSearchPosts} =
+  postsSlice.actions;
 export default postsSlice.reducer;

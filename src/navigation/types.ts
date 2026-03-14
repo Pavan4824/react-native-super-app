@@ -35,6 +35,7 @@ export type PlaceholderScreenParams = {
  */
 export type HomeTabStackParamList = {
   HomeIndex: undefined;
+  Search: undefined;
   PostDetail: {postId: number};
   HomeSettings: PlaceholderScreenParams | undefined;
 };

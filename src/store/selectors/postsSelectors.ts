@@ -7,7 +7,8 @@ export const selectPostsHasMore = (state: RootState) => state.posts.hasMore;
 export const selectPostsLoading = (state: RootState) => state.posts.loading;
 export const selectPostsLoadingMore = (state: RootState) =>
   state.posts.loadingMore;
-export const selectPostsRefreshing = (state: RootState) => state.posts.refreshing;
+export const selectPostsRefreshing = (state: RootState) =>
+  state.posts.refreshing;
 export const selectPostsError = (state: RootState) => state.posts.error;
 
 export const selectCurrentPost = (state: RootState) => state.posts.currentPost;
@@ -17,6 +18,11 @@ export const selectCurrentPostLoading = (state: RootState) =>
   state.posts.currentPostLoading;
 export const selectCurrentPostError = (state: RootState) =>
   state.posts.currentPostError;
+
+export const selectSearchPosts = (state: RootState) => state.posts.searchPosts;
+export const selectSearchLoading = (state: RootState) =>
+  state.posts.searchLoading;
+export const selectSearchError = (state: RootState) => state.posts.searchError;
 
 /** Memoized combined selector for posts list screen. Only recomputes when inputs change. */
 export const selectPostsListState = createSelector(

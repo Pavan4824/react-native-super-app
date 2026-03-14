@@ -23,6 +23,9 @@ export {
   selectCurrentPostAuthor,
   selectCurrentPostLoading,
   selectCurrentPostError,
+  selectSearchPosts,
+  selectSearchLoading,
+  selectSearchError,
   selectPostsListState,
   selectPostDetailState,
 } from './postsSelectors';
