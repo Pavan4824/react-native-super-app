@@ -1,12 +1,30 @@
+import {isAnyOf} from '@reduxjs/toolkit';
 import {fetchPostsPageThunk, fetchPostByIdThunk} from './slices/postsSlice';
 import {fetchUsersThunk, fetchUserByIdThunk} from './slices/usersSlice';
 import {startAppListening} from './listenerMiddleware';
 
 /**
  * Register all listener middleware entries.
- * Run this once after the store is created (listeners are registered on the middleware instance).
+ * You can add as many listeners as you want. In a single listener you can also
+ * combine multiple matchers with isAnyOf(...) or isAllOf(...) so one effect
+ * runs for several actions.
  */
 export function addListeners(): void {
+  // Example: one listener for any "detail" fetch (post or user) using multiple matchers
+  startAppListening({
+    matcher: isAnyOf(fetchPostByIdThunk.settled, fetchUserByIdThunk.settled),
+    effect: action => {
+      if (!__DEV__) return;
+      if (fetchPostByIdThunk.fulfilled.match(action)) {
+        console.log('[listener] detail loaded (post)', action.payload.post.id);
+      } else if (fetchUserByIdThunk.fulfilled.match(action)) {
+        console.log('[listener] detail loaded (user)', action.payload.user.id);
+      } else {
+        console.log('[listener] detail fetch failed', action.type);
+      }
+    },
+  });
+
   // Log when posts list fetch completes (success or failure)
   startAppListening({
     matcher: fetchPostsPageThunk.settled,
@@ -26,23 +44,6 @@ export function addListeners(): void {
     },
   });
 
-  // Log when a single post is fetched (e.g. post detail screen)
-  startAppListening({
-    matcher: fetchPostByIdThunk.settled,
-    effect: action => {
-      if (!__DEV__) return;
-      if (fetchPostByIdThunk.fulfilled.match(action)) {
-        console.log(
-          '[listener] post detail loaded',
-          action.payload.post.id,
-          action.payload.post.title?.slice(0, 30),
-        );
-      } else {
-        console.log('[listener] post detail failed', action.meta.arg);
-      }
-    },
-  });
-
   // Log when users list fetch completes
   startAppListening({
     matcher: fetchUsersThunk.settled,
@@ -55,23 +56,6 @@ export function addListeners(): void {
         `[listener] users/fetchList ${status}`,
         getState().users.list.length,
       );
-    },
-  });
-
-  // Log when a single user is fetched (e.g. user detail screen)
-  startAppListening({
-    matcher: fetchUserByIdThunk.settled,
-    effect: action => {
-      if (!__DEV__) return;
-      if (fetchUserByIdThunk.fulfilled.match(action)) {
-        console.log(
-          '[listener] user detail loaded',
-          action.payload.user.id,
-          action.payload.user.name,
-        );
-      } else {
-        console.log('[listener] user detail failed', action.meta.arg);
-      }
     },
   });
 }
