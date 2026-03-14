@@ -2,6 +2,8 @@ import React from 'react';
 import {Alert} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {PlaceholderScreen} from '../../screens/PlaceholderScreen';
+import {PostsListScreen} from '../../screens/PostsListScreen';
+import {PostDetailScreen} from '../../screens/PostDetailScreen';
 import {CustomBackButton} from '../../components/CustomBackButton';
 import {withBackHandler} from '../../hoc/ScreenWithBackHandler';
 import type {HomeTabStackParamList} from '../types';
@@ -26,15 +28,13 @@ export function HomeTabStack() {
       }}>
       <Stack.Screen
         name="HomeIndex"
-        component={PlaceholderWithBack}
-        options={{title: 'Home', headerLeft: () => null}}
-        initialParams={{title: 'Home', nextScreen: 'HomeDetail'}}
+        component={PostsListScreen}
+        options={{title: 'Posts', headerLeft: () => null}}
       />
       <Stack.Screen
-        name="HomeDetail"
-        component={PlaceholderWithBack}
-        options={{title: 'Home Detail'}}
-        initialParams={{title: 'Home Detail', nextScreen: 'HomeSettings'}}
+        name="PostDetail"
+        component={PostDetailScreen}
+        options={{title: 'Post'}}
       />
       <Stack.Screen
         name="HomeSettings"
