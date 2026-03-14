@@ -2,9 +2,11 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {PlaceholderScreen} from '../../screens/PlaceholderScreen';
 import {CustomBackButton} from '../../components/CustomBackButton';
+import {withBackHandler} from '../../components/ScreenWithBackHandler';
 import type {SettingsTabStackParamList} from '../types';
 
 const Stack = createNativeStackNavigator<SettingsTabStackParamList>();
+const PlaceholderWithBack = withBackHandler(PlaceholderScreen);
 
 export function SettingsTabStack() {
   return (
@@ -17,19 +19,19 @@ export function SettingsTabStack() {
     >
       <Stack.Screen
         name="SettingsIndex"
-        component={PlaceholderScreen}
+        component={PlaceholderWithBack}
         options={{title: 'Settings', headerLeft: () => null}}
         initialParams={{title: 'Settings', nextScreen: 'SettingsDetail'}}
       />
       <Stack.Screen
         name="SettingsDetail"
-        component={PlaceholderScreen}
+        component={PlaceholderWithBack}
         options={{title: 'Settings Detail'}}
         initialParams={{title: 'Settings Detail', nextScreen: 'SettingsSettings'}}
       />
       <Stack.Screen
         name="SettingsSettings"
-        component={PlaceholderScreen}
+        component={PlaceholderWithBack}
         options={{title: 'Settings Settings'}}
         initialParams={{title: 'Settings Settings'}}
       />
