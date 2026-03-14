@@ -1,10 +1,30 @@
-import React from 'react';
+import React, {lazy, Suspense} from 'react';
+import {ActivityIndicator, View} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {MainTabNavigator} from './MainTabNavigator';
-import {DrawerStackNavigator} from './DrawerStackNavigator';
 import type {RootDrawerParamList} from './types';
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
+
+const DrawerStackNavigator = lazy(() =>
+  import('./DrawerStackNavigator').then(m => ({default: m.DrawerStackNavigator})),
+);
+
+function DrawerStackFallback() {
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <ActivityIndicator size="large" />
+    </View>
+  );
+}
+
+function LazyDrawerStack() {
+  return (
+    <Suspense fallback={<DrawerStackFallback />}>
+      <DrawerStackNavigator />
+    </Suspense>
+  );
+}
 
 export function RootDrawerNavigator() {
   return (
@@ -20,7 +40,7 @@ export function RootDrawerNavigator() {
       />
       <Drawer.Screen
         name="DrawerStack"
-        component={DrawerStackNavigator}
+        component={LazyDrawerStack}
         options={{title: 'Drawer Stack'}}
       />
     </Drawer.Navigator>
