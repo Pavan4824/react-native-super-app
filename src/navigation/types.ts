@@ -24,47 +24,47 @@ export type RootDrawerParams = {
   DrawerStack: undefined;
 };
 
+/** Param list for screens that accept optional nextScreen for demo navigation. */
+export type PlaceholderScreenParams = {
+  title?: string;
+  nextScreen?: string;
+};
+
 /**
  * Each tab has its own stack with 3 screens.
  */
 export type HomeTabStackParamList = {
-  HomeIndex: undefined;
-  HomeDetail: undefined;
-  HomeSettings: undefined;
+  HomeIndex: PlaceholderScreenParams | undefined;
+  HomeDetail: PlaceholderScreenParams | undefined;
+  HomeSettings: PlaceholderScreenParams | undefined;
 };
 
 export type ExploreTabStackParamList = {
-  ExploreIndex: undefined;
-  ExploreDetail: undefined;
-  ExploreSettings: undefined;
+  ExploreIndex: PlaceholderScreenParams | undefined;
+  ExploreDetail: PlaceholderScreenParams | undefined;
+  ExploreSettings: PlaceholderScreenParams | undefined;
 };
 
 export type ProfileTabStackParamList = {
-  ProfileIndex: undefined;
-  ProfileDetail: undefined;
-  ProfileSettings: undefined;
+  ProfileIndex: PlaceholderScreenParams | undefined;
+  ProfileDetail: PlaceholderScreenParams | undefined;
+  ProfileSettings: PlaceholderScreenParams | undefined;
 };
 
 export type SettingsTabStackParamList = {
-  SettingsIndex: undefined;
-  SettingsDetail: undefined;
-  SettingsSettings: undefined;
+  SettingsIndex: PlaceholderScreenParams | undefined;
+  SettingsDetail: PlaceholderScreenParams | undefined;
+  SettingsSettings: PlaceholderScreenParams | undefined;
 };
 
 /**
  * Drawer stack: 6 screens (reachable from drawer menu).
  */
 export type DrawerStackParamList = {
-  DrawerScreen1: undefined;
-  DrawerScreen2: undefined;
-  DrawerScreen3: undefined;
-  DrawerScreen4: undefined;
-  DrawerScreen5: undefined;
-  DrawerScreen6: undefined;
-};
-
-/** Param list for screens that accept optional nextScreen for demo navigation. */
-export type PlaceholderScreenParams = {
-  title?: string;
-  nextScreen?: string;
+  DrawerScreen1: PlaceholderScreenParams | undefined;
+  DrawerScreen2: PlaceholderScreenParams | undefined;
+  DrawerScreen3: PlaceholderScreenParams | undefined;
+  DrawerScreen4: PlaceholderScreenParams | undefined;
+  DrawerScreen5: PlaceholderScreenParams | undefined;
+  DrawerScreen6: PlaceholderScreenParams | undefined;
 };
