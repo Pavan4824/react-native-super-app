@@ -56,6 +56,7 @@ export type SettingsTabStackParamList = {
   SettingsIndex: PlaceholderScreenParams | undefined;
   SettingsDetail: PlaceholderScreenParams | undefined;
   SettingsSettings: PlaceholderScreenParams | undefined;
+  About: undefined;
 };
 
 /**

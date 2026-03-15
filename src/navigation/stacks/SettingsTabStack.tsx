@@ -1,6 +1,7 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {PlaceholderScreen} from '../../screens/PlaceholderScreen';
+import {AboutScreen} from '../../screens/AboutScreen';
 import {CustomBackButton} from '../../components/CustomBackButton';
 import {withBackHandler} from '../../hoc/ScreenWithBackHandler';
 import type {SettingsTabStackParamList} from '../types';
@@ -35,7 +36,12 @@ export function SettingsTabStack() {
         name="SettingsSettings"
         component={PlaceholderWithBack}
         options={{title: 'Settings Settings'}}
-        initialParams={{title: 'Settings Settings'}}
+        initialParams={{title: 'Settings Settings', nextScreen: 'About'}}
+      />
+      <Stack.Screen
+        name="About"
+        component={AboutScreen}
+        options={{title: 'About'}}
       />
     </Stack.Navigator>
   );

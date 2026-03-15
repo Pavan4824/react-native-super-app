@@ -13,7 +13,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		D88125C8EFAAEC7E5C8DB719 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 42BBA1EAB18B638AAD853385 /* PrivacyInfo.xcprivacy */; };
-		F1A2B3C4D5E6789012345679 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F1A2B3C4D5E6789012345678 /* Ionicons.ttf */; };
+		E2F3A4B5C6D7890123456781 /* AppInfoTurboModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2F3A4B5C6D7890123456780 /* AppInfoTurboModule.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,8 +39,9 @@
 		5709B34CF0A7D63546082F79 /* Pods-superApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-superApp.release.xcconfig"; path = "Target Support Files/Pods-superApp/Pods-superApp.release.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-superApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-superApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		F1A2B3C4D5E6789012345678 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = Ionicons.ttf; sourceTree = "<group>"; };
+		E2F3A4B5C6D7890123456780 /* AppInfoTurboModule.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppInfoTurboModule.mm; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F1A2B3C4D5E6789012345678 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = Ionicons.ttf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				13B07FB81A68108800A75B9A /* AppDelegate.swift */,
+				E2F3A4B5C6D7890123456780 /* AppInfoTurboModule.mm */,
 				F1A2B3C4D5E678901234567A /* Fonts */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
@@ -91,15 +93,6 @@
 			);
 			name = superApp;
 			path = superApp;
-			sourceTree = "<group>";
-		};
-		F1A2B3C4D5E678901234567A /* Fonts */ = {
-			isa = PBXGroup;
-			children = (
-				F1A2B3C4D5E6789012345678 /* Ionicons.ttf */,
-			);
-			name = Fonts;
-			path = Fonts;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -149,6 +142,15 @@
 				5709B34CF0A7D63546082F79 /* Pods-superApp.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		F1A2B3C4D5E678901234567A /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				F1A2B3C4D5E6789012345678 /* Ionicons.ttf */,
+			);
+			name = Fonts;
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -245,7 +247,6 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				D88125C8EFAAEC7E5C8DB719 /* PrivacyInfo.xcprivacy in Resources */,
-				F1A2B3C4D5E6789012345679 /* Ionicons.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -359,6 +360,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FB91A68108800A75B9A /* AppDelegate.swift in Sources */,
+				E2F3A4B5C6D7890123456781 /* AppInfoTurboModule.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
