@@ -1,6 +1,7 @@
 import axios, {type InternalAxiosRequestConfig} from 'axios';
 import {apiConfig} from './config';
 import {ApiError} from './errors';
+import {getAuthToken} from '../security/secureStorage';
 
 const instance = axios.create({
   baseURL: apiConfig.baseURL,
@@ -9,10 +10,12 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    // Add auth token, tenant id, etc. when available:
-    // const token = getToken();
-    // if (token) config.headers.Authorization = `Bearer ${token}`;
+  async (config: InternalAxiosRequestConfig) => {
+    // Attach token from secure storage only; never store secrets in JS/AsyncStorage.
+    const token = await getAuthToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   error => Promise.reject(error),
