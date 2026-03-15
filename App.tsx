@@ -1,6 +1,7 @@
 import React from 'react';
-import {StatusBar} from 'react-native';
+import {ActivityIndicator, StatusBar, View} from 'react-native';
 import {Provider} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
@@ -11,7 +12,7 @@ import {
   useTheme,
   THEME_COLORS,
 } from './src/context/ThemeContext';
-import {store} from './src/store';
+import {store, persistor} from './src/store';
 
 function AppContent(): React.JSX.Element {
   const theme = useTheme();
@@ -49,16 +50,26 @@ function AppContent(): React.JSX.Element {
   );
 }
 
+function RehydrationFallback(): React.JSX.Element {
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <ActivityIndicator size="large" />
+    </View>
+  );
+}
+
 function App(): React.JSX.Element {
   return (
     <Provider store={store}>
-      <GestureHandlerRootView style={{flex: 1}}>
-        <SafeAreaProvider>
-          <ThemeProvider>
-            <AppContent />
-          </ThemeProvider>
-        </SafeAreaProvider>
-      </GestureHandlerRootView>
+      <PersistGate loading={<RehydrationFallback />} persistor={persistor}>
+        <GestureHandlerRootView style={{flex: 1}}>
+          <SafeAreaProvider>
+            <ThemeProvider>
+              <AppContent />
+            </ThemeProvider>
+          </SafeAreaProvider>
+        </GestureHandlerRootView>
+      </PersistGate>
     </Provider>
   );
 }
