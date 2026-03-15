@@ -1,13 +1,16 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import {
+  FocusableSearchInput,
+  type FocusableSearchInputHandle,
+} from '../components/FocusableSearchInput';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {HomeTabStackParamList} from '../navigation/types';
 import type {Post} from '../api/types';
@@ -44,8 +47,17 @@ export function SearchScreen({navigation}: Props) {
   const loading = useAppSelector(selectSearchLoading);
   const searchError = useAppSelector(selectSearchError);
 
+  // Ref exposes { focus, clear } via useImperativeHandle (not the raw TextInput).
+  const searchInputRef = useRef<FocusableSearchInputHandle>(null);
+
   const debouncedQuery = useDebouncedValue(input.trim(), DEBOUNCE_MS);
   const results = filterPosts(searchPosts, debouncedQuery);
+
+  // Focus the search input when the screen mounts (forwardRef makes this possible).
+  useEffect(() => {
+    const timer = setTimeout(() => searchInputRef.current?.focus(), 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   // When debounced query changes: clear search state if empty, else fetch all posts once via thunk
   useEffect(() => {
@@ -150,7 +162,8 @@ export function SearchScreen({navigation}: Props) {
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
-      <TextInput
+      <FocusableSearchInput
+        ref={searchInputRef}
         style={[
           styles.input,
           {
